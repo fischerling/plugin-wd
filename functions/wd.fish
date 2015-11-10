@@ -25,9 +25,11 @@ function wd --description 'warp directory'
     set -g __wd_exit_status 0
 
     # check if 'help' appears first -> don't parse $argv
-    if test $argv[1] = "help"
+    if begin test (count $argv) -eq 0
+             or test $argv[1] = "help"
+             end
         switch (count $argv)
-        case 1
+        case 0 1
             __wd_help ""
             return
         case 2
