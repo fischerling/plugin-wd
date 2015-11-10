@@ -1,0 +1,61 @@
+.TH "wd" 1 "Do Jul 16 2015" "Version future" "fish" \" -*- nroff -*-
+.SH NAME
+\fBwd\fP -- warp to directory
+.PP
+
+.SS SYNOPSIS
+\fBwd\fP [command] <point>
+.PP
+
+.SS DESCRIPTION
+.nf
+\fBwd\fP (warp directory) lets you quickly jump to custom directories in fish.
+Warping to a point pushes the point on the directory stack.
+Navigation back can be achieved with either "popd" or "wd ..".
+.fi
+.PP
+
+.SS COMMANDS
+.nf
+\fR..\fP              Pop the last directory from the directory stack
+add <point>     Adds the current working directory to your warp points
+add! <point>    Overwrites existing warp point
+rm <point>      Removes the given warp point
+show            Print warp points to current directory
+show <point>    Print path to given warp point
+list            Print all stored warp points
+ls <point>      Show files from given warp point
+path <point>    Show the path to given warp point
+clean           Remove warp points to nonexistent directories
+clean!          Same as clean without confirmation
+.fi
+.PP
+.nf
+-v | --version  Print version
+-c | --config   Specify and set config file (default ~/.warprc)
+-q | --quiet    Suppress all output
+-f | --force    Equivalent to '!' with add and clean
+.fi
+.PP
+help Shows this help text
+.PP
+
+.SS EXIT STATUS
+On success the exit status is 0, 1 otherwise.
+
+.SS EXAMPLES
+.IP "\fBwd add foo\fP" 4
+Add warp point named "foo" pointing to current working directory to list of warp points.
+.IP "\fBwd foo\fP" 4
+Warps to foo.
+.IP "\fBwd rm foo\fP" 4
+Remove any warp point named "foo".
+.PP
+
+.SS NOTES
+wd for fish is heavily influenced by the wd plugin for oh-my-zsh @github.com/mfaerevaag/wd.
+It is decined to be compatible with the original wd.
+
+
+.SS AUTHOR
+Florian Fischer: github.com/fischerling
