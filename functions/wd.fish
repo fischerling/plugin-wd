@@ -24,6 +24,21 @@ function wd --description 'warp directory'
     # set exit status
     set -g __wd_exit_status 0
 
+    # check if 'help' appears first -> don't parse $argv
+    if test $argv[1] = "help"
+        switch (count $argv)
+        case 1
+            __wd_help ""
+            return
+        case 2
+            __wd_help $argv[2]
+            return
+        end
+        __wd_print_msg "red" "help only takes one argument."
+        return
+    end
+
+
     #parse arguments
     set arguments
     for i in (seq 1 (count $argv))
@@ -54,12 +69,10 @@ function wd --description 'warp directory'
 
     if test (count $arguments) -eq 0
         if not set -q valid_single_option
-            __fish_print_help wd
+            __wd_help ""
         end
     else if test (count $arguments) -eq 1
         switch $arguments[1]
-            case help
-                __fish_print_help wd
             case add
                 __wd_exit_fail "You must enter a warp point"
             case add!
@@ -84,9 +97,6 @@ function wd --description 'warp directory'
 
     else if test (count $arguments) -eq 2
         switch $arguments[1]
-            case help
-                __fish_print_help wd
-                __wd_exit_warn "Command takes no argument. Ignoring '$arguments[2]'"
             case add
                 __wd_add "$force" $arguments[2]
             case add!
