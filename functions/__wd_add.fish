@@ -2,7 +2,7 @@ function __wd_add
     if string match -r "^(\.)+\$" $argv[2] >/dev/null
         __wd_exit_fail "Warp point cannot be just dots"
     else if string match "* *" $argv[2] >/dev/null
-        __wd_exit_fail "Warp point should not contain whitespace"
+        __wd_exit_fail "Warp point cannot contain whitespace"
     else if string match "*:*" $argv[2] >/dev/null
         __wd_exit_fail "Warp point cannot contain colons"
     else if test -z "$argv[2]"
