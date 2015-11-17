@@ -9,8 +9,9 @@
 
 .SS DESCRIPTION
 .nf
-\fBwd\fP (warp directory) lets you quickly jump to custom directories in fish.
-Warping to a point pushes the point on the directory stack.
+\fBwd\fP (warp directory) lets you quickly navigate through your filesystem 
+with costum directory shortcuts so called warp points.
+Warping to a path pushes the path on the directory stack.
 Navigation back can be achieved with either "popd" or "wd ..".
 .fi
 .PP
@@ -48,6 +49,8 @@ On success the exit status is 0, 1 otherwise.
 Add warp point named "foo" pointing to current working directory to list of warp points.
 .IP "\fBwd foo\fP" 4
 Warps to foo.
+.IP "\fBwd foo/bar\fP" 4
+Warps to foo's subdirectory bar.
 .IP "\fBwd rm foo\fP" 4
 Remove any warp point named "foo".
 .PP

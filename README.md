@@ -11,8 +11,9 @@
 
 Fast directory navigation plugin for [Oh My Fish][omf-link].
 
-wd (warp directory) lets you quickly jump to custom directories in fish.
-Warping to a point pushes the point on the directory stack.
+wd (warp directory) lets you quickly navigate through your filesystem 
+with costum directory shortcuts so called warp points.
+Warping to a path pushes the path on the directory stack.
 Navigation back can be achieved with either "popd" or "wd ..".
 
 ## Install
@@ -24,6 +25,7 @@ $ omf install wd
 ## Usage
 ```fish
 $ wd [option] <warp point>
+$ wd [option] <warp point>/some/path/
 $ wd [option] [command] [warp point]
 ```
 

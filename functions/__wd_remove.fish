@@ -1,4 +1,8 @@
 function __wd_remove
+    if string match "*/*" $argv[1] >/dev/null
+        __wd_exit_fail "Warp point cannot contain '/'"
+        return
+    end
     set path (__wd_path $argv[1])
     if test -n "$path"
         if sed -n "/^$argv[1]:.*\$/!p" $__wd_warprc > $__wd_warprc.tmp; and mv $__wd_warprc.tmp $__wd_warprc

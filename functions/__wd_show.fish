@@ -1,5 +1,9 @@
 function __wd_show
     if test -n "$argv[1]"
+        if string match "*/*" $argv[1] >/dev/null
+            __wd_exit_fail "Warp point cannot contain '/'"
+            return
+        end
         set path (__wd_path $argv[1])
         if test -n "$path"
             echo -n (__wd_print_msg "green" "Warp point:")
