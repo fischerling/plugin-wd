@@ -33,7 +33,7 @@ clean!          Same as clean without confirmation
 .PP
 .nf
 -v | --version  Print version
--c | --config   Specify and set config file (default ~/.warprc)
+-c | --config   Specify and set warp file (default ~/.warprc)
 -q | --quiet    Suppress all output
 -f | --force    Equivalent to '!' with add and clean
 .fi
@@ -57,7 +57,9 @@ Remove any warp point named "foo".
 
 .SS NOTES
 wd for fish is heavily influenced by the wd plugin for oh-my-zsh @github.com/mfaerevaag/wd.
-It is decined to be compatible with the original wd.
+It is designed to be compatible with the original wd.
+
+$__wd_warprc is used to store the location of the warp file.
 
 
 .SS AUTHOR
