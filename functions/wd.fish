@@ -13,6 +13,317 @@
 # author
 # @github.com/fischerling
 
+function __wd_print_msg -d "prints a message with the color given in argv[1]"
+    if set -q quiet
+        return
+    end
+    set_color $argv[1]
+    echo $argv[2]
+    set_color "normal"
+end
+
+function __wd_exit_fail
+    __wd_print_msg "red" $argv[1]
+    set __wd_exit_status 1
+end
+
+function __wd_exit_nopoint
+    __wd_print_msg "red" "Warp point $argv[1] not found"
+    set __wd_exit_status 1
+end
+
+function __wd_exit_warn
+    __wd_print_msg "yellow" $argv[1]
+    set __wd_exit_status 1
+end
+
+function __wd_read_warprc
+    cat $__wd_warprc
+end
+
+function __wd_help --argument command
+    echo
+    switch $command
+        case ""
+            echo "..              Pop the last directory from the directory stack"
+            echo "add <point>     Adds the current working directory to your warp points"
+            echo "add! <point>    Overwrites existing warp point"
+            echo "rm <point>      Removes the given warp point"
+            echo "show            Print warp points to current directory"
+            echo "show <point>    Print path to given warp point"
+            echo "list            Print all stored warp points"
+            echo "ls <point>      Show files from given warp point"
+            echo "path <point>    Show the path to given warp point"
+            echo "clean           Remove warp points to nonexistent directories"
+            echo "clean!          Same as clean without confirmation"
+            echo
+            echo "-v | --version  Print version"
+            echo "-c | --config   Specify and set config file (default ~/.warprc)"
+            echo "-q | --quiet    Suppress all output"
+            echo "-f | --force    Equivalent to '!' with add and clean"
+            echo
+            echo "help [command]] Shows help abput specific command"
+
+        case ".."
+            echo "Pops the last directory from the directory stack"
+            echo
+            echo "Usage:"
+            echo "      wd .."
+
+        case "add"
+            echo "Adds the current working directory to your warp points"
+            echo
+            echo "Usage:"
+            echo "      wd add <point_name>"
+
+        case "add!"
+            echo "Overwrites existing warp point"
+            echo
+            echo "Usage:"
+            echo "      wd add! <point_name>"
+
+        case "rm"
+            echo "Removes the given warp point"
+            echo
+            echo "Usage:"
+            echo "      wd rm <point_name>"
+
+        case "show"
+            echo "1) Print warp points to current directory or"
+            echo "2) Print path to given warp point"
+            echo
+            echo "Usage:"
+            echo "1)      wd show"
+            echo "2)      wd show <point_name>"
+
+
+        case "list"
+            echo "Print all stored warp points"
+            echo
+            echo "Usage:"
+            echo "      wd list"
+
+
+        case "ls"
+            echo "Show files from given warp point"
+            echo
+            echo "Usage:"
+            echo "      wd ls <point_name>"
+
+
+        case "path"
+            echo "Show the path to given warp point"
+            echo
+            echo "Usage:"
+            echo "      wd path <point_name> "
+
+
+        case "clean"
+            echo "Remove warp points to nonexistent directories"
+            echo
+            echo "Usage:"
+            echo "      wd clean" 
+
+
+        case "clean!"
+            echo "Same as clean without confirmation"
+            echo
+            echo "Usage:"
+            echo "      wd clean!"
+
+        case "-v" "--version"
+            echo "Print version"
+            echo
+            echo "Usage:"
+            echo "      wd -v [option] [command]"
+            echo "      wd --version [option] [command]"
+            echo "Output:"
+            echo "      wd version <wd_version>"
+            echo "      [output from command]"
+
+
+        case "-c" "--config"
+            echo "Specify and set config file (default ~/.warprc)"
+            echo
+            echo "Usage:"
+            echo "      wd -c <path/to/config> [options] [command]"
+            echo "      wd --config <path/to/config> [options] [command]"
+
+
+        case "-q" "--quiet"
+            echo "Suppress all output"
+            echo
+            echo "Usage:"
+            echo "      wd -q [options] [command]"
+            echo "      wd --quiet [options] [command]"
+
+
+        case "-f" "--force"
+            echo "Equivalent to '!' with add and clean"
+            echo
+            echo "Usage:"
+            echo "      wd -f add <point> == wd add! <point>"
+            echo "      wd -f clean == wd clean!"
+
+
+        case "*"
+            echo "no help available for $command"
+            echo "please use wd help for an overview of all commands"
+    end
+end
+
+function __wd_add
+    if string match -r "^(\.)+\$" $argv[2] >/dev/null
+        __wd_exit_fail "Warp point cannot be just dots"
+    else if string match "*/*" $argv[2] >/dev/null
+        __wd_exit_fail "Warp point cannot contain '/'"
+    else if string match "* *" $argv[2] >/dev/null
+        __wd_exit_fail "Warp point cannot contain whitespace"
+    else if string match "*:*" $argv[2] >/dev/null
+        __wd_exit_fail "Warp point cannot contain colons"
+    else if test -z "$argv[2]"
+        __wd_exit_fail "Warp point cannot be empty"
+    else
+        set path (__wd_path $argv[2])
+        if test -n "$path"
+            if test "$argv[1]" = "true"
+                __wd_remove $argv[2] >/dev/null
+            else
+                __wd_exit_fail "Warp point $argv[2] already exists. Use add! or -f to overwrite."
+                return
+            end
+        end
+        echo "$argv[2]:$PWD" >> $__wd_warprc
+        __wd_print_msg "green" "Warp point $argv[2] added"
+    end
+end
+
+function __wd_clean
+    for l in (__wd_read_warprc)
+        if not test -d (string split ":" $l)[2]
+            set broken_entries $broken_entries $l
+            echo -n (__wd_print_msg "yellow" "Nonexistent directory:")
+            __wd_print_msg "normal" (string replace ":" " ->  " $l)
+        end
+    end
+    set n (count $broken_entries)
+    if test $n -eq 0
+        __wd_print_msg "blue" "No warp points to clean, carry on!"
+    else
+        if test $argv[1] != "true"
+            while true
+                read -p "echo -n 'Removing $n warp points. Continue? (Y/n) '" answer
+                switch $answer
+                    case Y y YES yes Yes ""
+                        set answer "yes"
+                        break
+                    case N n NO no No
+                        set answer "no"
+                        break
+                    case "*"
+                        echo "Please provide a valid answer (y or n)"
+                end
+            end
+            if test "$answer" = "no"
+                __wd_print_msg "yellow" "Cleanup aborted"
+                return
+            end
+        end
+        for entry in $broken_entries
+            __wd_remove (string split ":" $entry)[1] >/dev/null
+        end
+        __wd_print_msg "green" "Clenup complete. $n warp point(s) removed"
+    end
+end
+
+function __wd_list
+    __wd_print_msg "blue" "All warp points:"
+    for l in (__wd_read_warprc)
+        __wd_print_msg "normal" (printf "%20s  ->  %s" (string split ':' $l))
+    end
+end
+
+function __wd_ls
+    set path (__wd_path $argv[1])
+    if test -z "$path"
+        __wd_exit_nopoint $argv[1]
+    else
+        ls $path
+    end
+end
+
+function __wd_path
+    set path (string split -m1 "/" $argv[1])
+    for l in (__wd_read_warprc)
+        if string match "$path[1]:*" $l >/dev/null
+            if test (count $path) -eq 2
+                echo (string split : $l)[2]"/$path[2]"
+            else
+                echo (string split : $l)[2]
+            end
+        end
+    end
+end
+
+function __wd_remove
+    if string match "*/*" $argv[1] >/dev/null
+        __wd_exit_fail "Warp point cannot contain '/'"
+        return
+    end
+    set path (__wd_path $argv[1])
+    if test -n "$path"
+        if sed -n "/^$argv[1]:.*\$/!p" $__wd_warprc > $__wd_warprc.tmp; and mv $__wd_warprc.tmp $__wd_warprc
+            __wd_print_msg "green" "Warp point $argv[1] removed"
+        else
+            __wd_exit_fail "Unable to delete warp point!"
+        end
+    else
+        __wd_exit_nopoint $argv[1]
+    end
+end
+
+function __wd_show
+    if test -n "$argv[1]"
+        if string match "*/*" $argv[1] >/dev/null
+            __wd_exit_fail "Warp point cannot contain '/'"
+            return
+        end
+        set path (__wd_path $argv[1])
+        if test -n "$path"
+            echo -n (__wd_print_msg "green" "Warp point:")
+            __wd_print_msg "normal" "$argv[1] -> $path"
+        else
+            __wd_exit_nopoint $argv[1]
+        end
+    else
+        for l in (__wd_read_warprc)
+            if string match "*:$PWD" $l >/dev/null
+                set matches $matches (string split ":" $l)[1]
+            end
+        end
+        if test (count $matches) -ne 0
+            echo -n (__wd_print_msg "blue" (count $matches))
+            echo -n (__wd_print_msg "normal" "warp point(s) to current directory:")
+            __wd_print_msg "blue" "$matches"
+        else
+            __wd_exit_fail "No warp points to $PWD"
+        end
+    end
+end
+
+function __wd_warp
+    if test $argv[1] = ".."
+        popd
+    else
+        set path (__wd_path $argv[1])
+        if test -z "$path"
+            __wd_exit_nopoint (string split "/" $argv[1])[1]
+        else
+            pushd $path
+        end
+    end
+end
+
 function wd --description 'warp directory'
 	set __wd_version 0.8
 
