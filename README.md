@@ -9,7 +9,7 @@
 
 # wd
 
-Fast directory navigation plugin for [Oh My Fish][omf-link].
+Fast directory navigation plugin for [fish shell][fish].
 
 wd (warp directory) lets you quickly navigate through your filesystem 
 with custom directory shortcuts so called warp points.
@@ -18,8 +18,16 @@ Navigation back can be achieved with either "popd" or "wd ..".
 
 ## Install
 
+With [Oh My Fish][omf-link]:
+
 ```fish
 $ omf install wd
+```
+
+With [fisherman][fisherman]:
+
+```fish
+$ fisher https://github.com/fischerling/plugin-wd
 ```
 
 ## Usage
@@ -61,5 +69,7 @@ help Shows the help text
 [author]:         http://github.com/fischerling
 [contributors]:   https://github.com/fischerling/plugin-wd/graphs/contributors
 [omf-link]:       https://www.github.com/oh-my-fish/oh-my-fish
+[fisherman]:      https://github.com/fisherman/fisherman
+[fish]:           http://fishshell.com/
 
 [license-badge]:  https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square
