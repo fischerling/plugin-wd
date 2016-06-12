@@ -62,7 +62,7 @@ function __wd_help --argument command
             echo "-q | --quiet    Suppress all output"
             echo "-f | --force    Equivalent to '!' with add and clean"
             echo
-            echo "help [command]] Shows help abput specific command"
+            echo "help [command]  Shows help about specific command"
 
         case ".."
             echo "Pops the last directory from the directory stack"
