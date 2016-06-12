@@ -16,6 +16,10 @@ with custom directory shortcuts so called warp points.
 Warping to a path pushes the path on the directory stack.
 Navigation back can be achieved with either "popd" or "wd ..".
 
+## Requirements
+
+Fish version 2.3 is required for the new string function.
+
 ## Install
 
 With [Oh My Fish][omf-link]:
