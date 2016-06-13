@@ -366,8 +366,13 @@ function wd --description 'warp directory'
             case -c --config
                 set config_set
                 set valid_single_option
-                if test -f $argv[(math $i+1)]
-                    set -U __wd_warprc $argv[(math $i+1)]
+                set conf_pos (math $i+1)
+                if test $conf_pos -gt (count $argv)
+                    __wd_exit_fail "'-c' needs a file path as argument"
+                    return $__wd_exit_status
+                end
+                if test -f $argv[$conf_pos]
+                    set -U __wd_warprc $argv[$conf_pos]
                 else
                     __wd_print_msg "yellow" "Ignoring -c $argv[$i] because it is not a valid file"
                 end
