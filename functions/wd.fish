@@ -38,11 +38,7 @@ function __wd_exit_warn
 end
 
 function __wd_read_warprc
-    if test -f $__wd_warprc
-        cat $__wd_warprc
-    else
-        __wd_exit_fail "warprc not found"
-    end
+    cat $__wd_warprc
 end
 
 function __wd_help --argument command
@@ -387,6 +383,11 @@ function wd --description 'warp directory'
                     set arguments $arguments $argv[$i]
                 end
         end
+    end
+
+    # silently create warprc
+    if not test -f $__wd_warprc
+        touch $__wd_warprc
     end
 
     if test (count $arguments) -eq 0
