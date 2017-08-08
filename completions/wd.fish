@@ -17,6 +17,8 @@ end
 function __wd_warppoints
     if test -f $__wd_warprc
         echo (cat $__wd_warprc | cut -d : -f 1)
+    else
+        echo
     end
 end
 
