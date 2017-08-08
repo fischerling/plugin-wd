@@ -38,7 +38,11 @@ function __wd_exit_warn
 end
 
 function __wd_read_warprc
-    cat $__wd_warprc
+    if test -f $__wd_warprc
+        cat $__wd_warprc
+    else
+        __wd_exit_fail "warprc not found"
+    end
 end
 
 function __wd_help --argument command
