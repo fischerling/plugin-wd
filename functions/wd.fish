@@ -254,14 +254,19 @@ end
 
 function __wd_path
     set path (string split -m1 "/" $argv[1])
+    set found "false"
     for l in (__wd_read_warprc)
         if string match "$path[1]:*" $l >/dev/null
+            set found "true"
             if test (count $path) -eq 2
                 echo (string split : $l)[2]"/$path[2]"
             else
                 echo (string split : $l)[2]
             end
         end
+    end
+    if test $found = "false" 
+        set __wd_exit_status 1
     end
 end
 
