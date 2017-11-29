@@ -353,7 +353,7 @@ function __wd_warp
 end
 
 function wd --description 'warp directory'
-    set __wd_version 0.8
+    set __wd_version 0.9
 
     # find warppoints
     if not set -q __wd_warprc; or not test -f $__wd_warprc
