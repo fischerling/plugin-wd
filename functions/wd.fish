@@ -346,7 +346,7 @@ function wd --description 'warp directory'
     set __wd_version 0.8
 
     # find warppoints
-    if not set -q __wd_warprc
+    if not set -q __wd_warprc; or not test -f $__wd_warprc
         if set -q WARP_FILE
             set -g __wd_warprc $WARP_FILE
 
