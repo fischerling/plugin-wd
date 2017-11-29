@@ -14,7 +14,7 @@ function __wd_using_command
     return 1
 end
 
-function __wd_warppoints
+function __wd_complete_warppoints
    echo (cat (wd warppoints-file) | cut -d : -f 1)
 end
 
@@ -25,7 +25,7 @@ complete -c wd -s v -l version -f -d "Print version"
 complete -c wd -s f -l force -d "Equivalent to ! (add | clean)"
 
 #Warp points
-complete -c wd -n '__wd_no_command' -f -d "Warp point" -a (__wd_warppoints)
+complete -c wd -n '__wd_no_command' -f -d "Warp point" -a (__wd_complete_warppoints)
 #Commands
 complete -c wd -n '__wd_no_command' -x -d "Go back in the directory stack" -a ".."
 complete -c wd -n '__wd_no_command' -x -d "Adds the current working directory to your warp points" -a "add"
@@ -42,7 +42,7 @@ complete -c wd -n '__wd_no_command' -x -d "Remove warp points to nonexistent dir
 complete -c wd -n '__wd_no_command' -x -d "Remove warp points to nonexistent directories without confirmation" -a "clean!"
 
 #Command specific completions
-complete -c wd -x -n '__wd_using_command rm' -d "Warp point" -a (__wd_warppoints)
-complete -c wd -x -n '__wd_using_command show' -d "Warp point" -a (__wd_warppoints)
-complete -c wd -x -n '__wd_using_command ls' -d "Warp point" -a (__wd_warppoints)
-complete -c wd -x -n '__wd_using_command path' -d "Warp point" -a (__wd_warppoints)
+complete -c wd -x -n '__wd_using_command rm' -d "Warp point" -a (__wd_complete_warppoints)
+complete -c wd -x -n '__wd_using_command show' -d "Warp point" -a (__wd_complete_warppoints)
+complete -c wd -x -n '__wd_using_command ls' -d "Warp point" -a (__wd_complete_warppoints)
+complete -c wd -x -n '__wd_using_command path' -d "Warp point" -a (__wd_complete_warppoints)
