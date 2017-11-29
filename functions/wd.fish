@@ -330,11 +330,47 @@ function __wd_warp
 end
 
 function wd --description 'warp directory'
-	set __wd_version 0.8
+    set __wd_version 0.8
 
-     # set default warprc location
+    # find warppoints
     if not set -q __wd_warprc
-        set -U __wd_warprc "$HOME/.warprc"
+        if set -q WARP_FILE
+            set -g __wd_warprc $WARP_FILE
+
+        # search XDG_DATA_DIRS
+        else if set -q XDG_DATA_DIRS
+            for dir in $XDG_DATA_DIRS
+                if test -f $dir/wd/warppoints
+                    set -g __wd_warprc $dir/wd/warppoints
+                    break
+                end
+            end
+
+        # search XDG_DATA_HOME
+        else if set -q XDG_DATA_HOME; and test -f $XDG_DATA_HOME/wd/warppoints
+            set -g __wd_warprc $XDG_DATA_HOME/wd/warppoints
+
+        # search XDG_DATA_HOME default: ~/.local/share
+        else if test -f $HOME/.local/share/wd/warppoints
+            set -g __wd_warprc $HOME/.local/share/wd/warppoints
+
+        # look for old warprc file
+        else if test -f $HOME/.warprc
+            set -g __wd_warprc "$HOME/.warprc"
+            __wd_print_msg "red" "Warp point file location: $HOME/.warprc is deprecated!"
+            __wd_print_msg "red" "Please use $XDG_DATA_HOME/wd/warppoints instead."
+        end
+
+        # Silently create warppoint file in XDG_DATA_HOME
+        if not set -q __wd_warprc
+            set prefix $XDG_DATA_HOME
+            test -z $pefix; and set prefix $HOME/.local/share/wd
+
+            mkdir -p $prefix
+            touch $prefix/warppoints
+
+            set -g __wd_warprc $prefix/warppoints
+        end
     end
 
     # set exit status
@@ -388,11 +424,6 @@ function wd --description 'warp directory'
                     set arguments $arguments $argv[$i]
                 end
         end
-    end
-
-    # silently create warprc
-    if not test -f $__wd_warprc
-        touch $__wd_warprc
     end
 
     if test (count $arguments) -eq 0
