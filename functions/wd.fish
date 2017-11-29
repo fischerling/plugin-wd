@@ -53,6 +53,7 @@ function __wd_help --argument command
             echo "show <point>    Print path to given warp point"
             echo "list            Print all stored warp points"
             echo "warppoints      Print names of all stored warp points"
+            echo "warppoints-file Print path where the warppoints are stored"
             echo "ls <point>      Show files from given warp point"
             echo "path <point>    Show the path to given warp point"
             echo "clean           Remove warp points to nonexistent directories"
@@ -110,6 +111,11 @@ function __wd_help --argument command
             echo "Usage:"
             echo "      wd warppoints"
 
+        case "warppoints-file"
+            echo "Print path where the warppoints are stored"
+            echo
+            echo "Usage:"
+            echo "      wd warppoints-file"
 
         case "ls"
             echo "Show files from given warp point"
@@ -254,6 +260,10 @@ function __wd_warppoints
     for l in (__wd_read_warprc)
         __wd_print_msg "normal" (string split ':' $l)
     end
+end
+
+function __wd_warppoints_file
+    echo $__wd_warprc
 end
 
 function __wd_ls
@@ -457,6 +467,8 @@ function wd --description 'warp directory'
                 __wd_list
             case warppoints
                 __wd_warppoints
+            case warppoints-file
+                __wd_warppoints_file
             case ls
                 __wd_exit_fail "You must enter a warp point"
             case path
@@ -484,6 +496,9 @@ function wd --description 'warp directory'
                 __wd_exit_warn "Command takes no argument. Ignoring '$arguments[2]'"
             case warppoints
                 __wd_warppoints
+                __wd_exit_warn "Command takes no argument. Ignoring '$arguments[2]'"
+            case warppoints-file
+                __wd_warppoints_file
                 __wd_exit_warn "Command takes no argument. Ignoring '$arguments[2]'"
             case ls
                 __wd_ls $arguments[2]
