@@ -15,11 +15,7 @@ function __wd_using_command
 end
 
 function __wd_warppoints
-    if test -f $__wd_warprc
-        echo (cat $__wd_warprc | cut -d : -f 1)
-    else
-        echo
-    end
+   echo (cat (wd warppoints-file) | cut -d : -f 1)
 end
 
 #Options
@@ -36,6 +32,9 @@ complete -c wd -n '__wd_no_command' -x -d "Adds the current working directory to
 complete -c wd -n '__wd_no_command' -x -d "Overwrites existing warp point" -a "add!"
 complete -c wd -n '__wd_no_command' -x -d "Removes the given warp point" -a "rm"
 complete -c wd -n '__wd_no_command' -x -d "Outputs all warp points to the current directory or the target of one specific point" -a "show"
+complete -c wd -n '__wd_no_command' -x -d "Outputs all stored warp points" -a "list"
+complete -c wd -n '__wd_no_command' -x -d "Outputs all warp point names " -a "warppoints"
+complete -c wd -n '__wd_no_command' -x -d "Print path where warp points are stored" -a "warppoints-file"
 complete -c wd -n '__wd_no_command' -x -d "Outputs all stored warp points" -a "list"
 complete -c wd -n '__wd_no_command' -x -d "Show file from given warp point" -a "ls"
 complete -c wd -n '__wd_no_command' -x -d "Output path to given warp point" -a "path"
