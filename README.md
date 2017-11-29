@@ -53,6 +53,8 @@ rm <point>      Removes the given warp point
 show            Print warp points to current directory
 show <point>    Print path to given warp point
 list            Print all stored warp points
+warppoints      Print names of all stored warp points
+warppoints-file Print path where the warppoints are stored
 ls <point>      Show files from given warp point
 path <point>    Show the path to given warp point
 clean           Remove warp points to nonexistent directories
