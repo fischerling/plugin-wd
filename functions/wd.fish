@@ -381,7 +381,11 @@ function wd --description 'warp directory'
         else if test -f $HOME/.warprc
             set -g __wd_warprc "$HOME/.warprc"
             __wd_print_msg "red" "Warp point file location: $HOME/.warprc is deprecated!"
-            __wd_print_msg "red" "Please use $XDG_DATA_HOME/wd/warppoints instead."
+            if set -q XDG_DATA_HOME
+            	__wd_print_msg "red" "Please use $XDG_DATA_HOME/wd/warppoints instead."
+            else
+            	__wd_print_msg "red" "Please use $HOME/.local/share/wd/warppoints instead."
+            end
         end
 
         # Silently create warppoint file in XDG_DATA_HOME
