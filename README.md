@@ -33,7 +33,7 @@ $ omf install wd
 With [fisherman][fisherman]:
 
 ```fish
-$ fisher https://github.com/fischerling/plugin-wd
+$ fisher fischerling/plugin-wd
 ```
 
 ## Usage
