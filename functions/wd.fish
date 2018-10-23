@@ -355,6 +355,39 @@ end
 function wd --description 'warp directory'
     set __wd_version 0.9
 
+    #parse arguments
+    set arguments
+    for i in (seq 1 (count $argv))
+        switch $argv[$i]
+            case -v --version
+                __wd_print_msg "normal" "wd version $__wd_version"
+                set valid_single_option
+            case -f --force
+                set force "true"
+            case -q --quiet
+                set -g quiet
+            case -c --config
+                set config_set
+                set valid_single_option
+                set conf_pos (math $i+1)
+                if test $conf_pos -gt (count $argv)
+                    __wd_exit_fail "'-c' needs a file path as argument"
+                    return $__wd_exit_status
+                end
+                if test -f $argv[$conf_pos]
+                    set -U __wd_warprc $argv[$conf_pos]
+                else
+                    __wd_print_msg "yellow" "Ignoring -c $argv[$i] because it is not a valid file"
+                end
+            case '*'
+                if set -q config_set
+                    set -e config_set
+                else
+                    set arguments $arguments $argv[$i]
+                end
+        end
+    end
+
     # find warppoints
     if not set -q __wd_warprc; or not test -f $__wd_warprc
         if set -q WARP_FILE
@@ -417,40 +450,6 @@ function wd --description 'warp directory'
         end
         __wd_print_msg "red" "help only takes one argument."
         return
-    end
-
-
-    #parse arguments
-    set arguments
-    for i in (seq 1 (count $argv))
-        switch $argv[$i]
-            case -v --version
-                __wd_print_msg "normal" "wd version $__wd_version"
-                set valid_single_option
-            case -f --force
-                set force "true"
-            case -q --quiet
-                set -g quiet
-            case -c --config
-                set config_set
-                set valid_single_option
-                set conf_pos (math $i+1)
-                if test $conf_pos -gt (count $argv)
-                    __wd_exit_fail "'-c' needs a file path as argument"
-                    return $__wd_exit_status
-                end
-                if test -f $argv[$conf_pos]
-                    set -U __wd_warprc $argv[$conf_pos]
-                else
-                    __wd_print_msg "yellow" "Ignoring -c $argv[$i] because it is not a valid file"
-                end
-            case '*'
-                if set -q config_set
-                    set -e config_set
-                else
-                    set arguments $arguments $argv[$i]
-                end
-        end
     end
 
     if test (count $arguments) -eq 0
