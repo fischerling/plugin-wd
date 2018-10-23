@@ -347,6 +347,7 @@ function __wd_warp
         if test -z "$path"
             __wd_exit_nopoint (string split "/" $argv[1])[1]
         else
+            set path (string replace -r "^~" $HOME $path)
             pushd $path
         end
     end
