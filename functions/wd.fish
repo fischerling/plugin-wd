@@ -376,6 +376,8 @@ function wd --description 'warp directory'
                     return $__wd_exit_status
                 end
                 if test -f $argv[$conf_pos]
+                    # erase possible old global variable
+                    set -e __wd_warprc
                     set -U __wd_warprc $argv[$conf_pos]
                 else
                     __wd_print_msg "yellow" "Ignoring -c $argv[$i] because it is not a valid file"
