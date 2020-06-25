@@ -61,12 +61,25 @@ clean           Remove warp points to nonexistent directories
 clean!          Same as clean without confirmation
 
 -v | --version  Print version
--c | --config   Specify and set config file (default ~/.warprc)
+-c | --config   Specify and set config file
 -q | --quiet    Suppress all output
 -f | --force    Equivalent to '!' with add and clean
 
 help Shows the help text
 ```
+
+## Default warpfile location
+
+If wd hasn't already found a warpfile and stored its path in the universal fish variable `__wd_warprc` it will
+search at those locations in the following order:
+
+1. $WARP_FILE (environment variable)
+2. $xdg_data_dir/wd/warppoints (for xdg_data_dir in $XDG_DATA_DIRS)
+3. $XDG_DATA_HOME/wd/warppoints
+4. $HOME/.local/share/wd/warppoints
+5. $HOME/.warprc (deprecated)
+
+If it can find a warppoint file it will silently create a new one in 3. or 4. according to the XDG Base Directory standard.
 
 # License
 
