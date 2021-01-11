@@ -43,6 +43,16 @@ $ wd [option] <warp point>/some/path/
 $ wd [option] [command] [warp point]
 ```
 
+### Example
+```fish
+# remember the path to your cool project
+cd path/to/your/cool/project
+wd add cool-project
+
+# warp to your cool project from anywhere
+wd cool-project
+```
+
 ## Commands
 
 ```fish
