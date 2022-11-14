@@ -8,7 +8,7 @@
 # This script is heavily influenced by :
 # @github.com/mfaerevaag/wd 
 #
-# And it is decined to be compatible with the original wd.
+# And it is designed to be compatible with the original wd.
 #
 # author
 # @github.com/fischerling
@@ -46,8 +46,8 @@ function __wd_help --argument command
     switch $command
         case ""
             echo "..              Pop the last directory from the directory stack"
-            echo "add <point>     Adds the current working directory to your warp points"
-            echo "add! <point>    Overwrites existing warp point"
+            echo "add [point]     Adds the current working directory to your warp points"
+            echo "add! [point]    Overwrites existing warp point"
             echo "rm <point>      Removes the given warp point"
             echo "show            Print warp points to current directory"
             echo "show <point>    Print path to given warp point"
@@ -73,16 +73,20 @@ function __wd_help --argument command
             echo "      wd .."
 
         case "add"
-            echo "Adds the current working directory to your warp points"
+            echo "1) Adds the current working directory to your warp points"
+            echo "2) Uses the current working directory's name as warp point name"
             echo
             echo "Usage:"
-            echo "      wd add <point_name>"
+            echo "1)      wd add <point_name>"
+            echo "2)      wd add"
 
         case "add!"
-            echo "Overwrites existing warp point"
+            echo "1) Overwrites existing warp point"
+            echo "2) Use the current working directory's name as warp point name"
             echo
             echo "Usage:"
-            echo "      wd add! <point_name>"
+            echo "1)      wd add! <point_name>"
+            echo "2)      wd add!"
 
         case "rm"
             echo "Removes the given warp point"
@@ -462,9 +466,9 @@ function wd --description 'warp directory'
     else if test (count $arguments) -eq 1
         switch $arguments[1]
             case add
-                __wd_exit_fail "You must enter a warp point"
+                __wd_add "$force" (basename $PWD)
             case add!
-                __wd_exit_fail "You must enter a warp point"
+                __wd_add "true" (basename $PWD)
             case rm
                 __wd_exit_fail "You must enter a warp point"
             case show
